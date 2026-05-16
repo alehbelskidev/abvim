@@ -1,0 +1,4 @@
+-std=c99
+-Wall
+-Iinclude
+--query-driver=/usr/bin/clang,/usr/bin/gcc

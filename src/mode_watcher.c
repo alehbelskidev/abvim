@@ -3,6 +3,10 @@
 #include <raylib.h>
 #include <stdlib.h>
 
+#include "editor_config.h"
+
+ModeWatcher* mw;
+
 static const ModeStyle MODE_STYLES[] = {
     [MODE_NORMAL] = {.bg = {97, 175, 239, 255}, .fg = {40, 44, 52, 255}, .label = "NORMAL"},
     [MODE_INSERT] = {.bg = {198, 120, 221, 255}, .fg = {40, 44, 52, 255}, .label = "INSERT"},
@@ -13,39 +17,38 @@ static const ModeStyle MODE_STYLES[] = {
     [MODE_COMMAND] = {.bg = {152, 195, 121, 255}, .fg = {40, 44, 52, 255}, .label = "COMMAND"},
     [MODE_COMMAND_LINE] = {.bg = {86, 182, 194, 255}, .fg = {40, 44, 52, 255}, .label = "C-LINE"}};
 
-ModeWatcher* MW_New()
+void MW_Init()
 {
-    ModeWatcher* mw = malloc(sizeof(ModeWatcher));
-
+    mw = malloc(sizeof(ModeWatcher));
     if (mw != NULL) {
         mw->mode = MODE_NORMAL;
         mw->modeStyle = MODE_STYLES[mw->mode];
     }
-
-    return mw;
 }
-
-void MW_Free(ModeWatcher* mw)
+void MW_FREE()
 {
     if (mw != NULL) {
         free(mw);
     }
 }
 
-void MW_SetMode(ModeWatcher* self, Mode m)
+void MW_SetMode(Mode m)
 {
-    self->mode = m;
-    self->modeStyle = MODE_STYLES[self->mode];
+    mw->mode = m;
+    mw->modeStyle = MODE_STYLES[mw->mode];
 }
 
-void MW_Draw(ModeWatcher* self)
+void MW_Draw(const EditorConfig* ec)
 {
-    ModeStyle* ms = &self->modeStyle;
+    ModeStyle* ms = &mw->modeStyle;
     int screenHeight = GetScreenHeight();
 
     // TODO: following should be dynamic somehow;
     int blockHeight = 40;
     int fontSize = 20;
+    if (ec != NULL) {
+        fontSize = ec->fontSize;
+    }
     int textPadding = 20;
     // END TODO
 

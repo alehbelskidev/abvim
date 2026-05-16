@@ -1,9 +1,11 @@
+#include "editor_config.h"
 #include "mode_watcher.h"
 #include "raylib.h"
 
 int main(void)
 {
-    ModeWatcher* mw = MW_New();
+    EditorConfig* config = EC_Init();
+    MW_Init();
 
     const int screenWidth = 800;
     const int screenHeight = 450;
@@ -17,7 +19,7 @@ int main(void)
 
         // FRAME
         ClearBackground(BLACK);
-        MW_Draw(mw);
+        MW_Draw(config);
         // END FRAME
 
         EndDrawing();

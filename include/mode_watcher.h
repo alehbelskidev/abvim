@@ -3,6 +3,8 @@
 
 #include <raylib.h>
 
+#include "editor_config.h"
+
 typedef enum {
     MODE_NORMAL,
     MODE_INSERT,
@@ -25,9 +27,10 @@ typedef struct {
     ModeStyle modeStyle;
 } ModeWatcher;
 
-ModeWatcher* MW_New();
-void MW_Free(ModeWatcher* mw);
-void MW_SetMode(ModeWatcher* self, Mode m);
-void MW_Draw(ModeWatcher* self);
+void MW_Init();
+void MW_FREE();
+
+void MW_SetMode(Mode m);
+void MW_Draw(const EditorConfig* ec);
 
 #endif  // !MODE_WATCHER_H

@@ -1,5 +1,6 @@
 #include "editor_config.h"
 
+#include <raylib.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -39,6 +40,17 @@ EditorConfig* EC_Init()
     }
 
     return ec;
+}
+
+void EC_LoadFont(EditorConfig* ec)
+{
+    ec->font = LoadFontEx(ec->fontPath, ec->fontSize * 2, NULL, 0);
+    SetTextureFilter(ec->font.texture, TEXTURE_FILTER_BILINEAR);
+}
+
+void EC_UnloadFont(EditorConfig* ec)
+{
+    UnloadFont(ec->font);
 }
 
 void EC_FREE(EditorConfig* ec)

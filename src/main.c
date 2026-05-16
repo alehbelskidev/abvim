@@ -13,6 +13,7 @@ int main(void)
     SetWindowState(FLAG_WINDOW_RESIZABLE);
     InitWindow(screenWidth, screenHeight, "ABVIM");
     SetTargetFPS(60);
+    EC_LoadFont(config);
 
     while (!WindowShouldClose()) {
         BeginDrawing();
@@ -25,6 +26,7 @@ int main(void)
         EndDrawing();
     }
 
+    EC_UnloadFont(config);
     CloseWindow();
 
     return 0;

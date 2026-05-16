@@ -41,19 +41,16 @@ void MW_SetMode(Mode m)
 void MW_Draw(const EditorConfig* ec)
 {
     ModeStyle* ms = &mw->modeStyle;
-    int screenHeight = GetScreenHeight();
+    int screenH = GetScreenHeight();
 
-    // TODO: following should be dynamic somehow;
-    int blockHeight = 40;
-    int fontSize = 20;
-    if (ec != NULL) {
-        fontSize = ec->fontSize;
-    }
-    int textPadding = 20;
-    // END TODO
+    int paddingX = 16;
+    int paddingY = 8;
+    Vector2 textSize = MeasureTextEx(ec->font, ms->label, ec->fontSize, 0);
+    int blockH = textSize.y + paddingY / 2;
+    int blockW = textSize.x + paddingX;
+    int blockY = screenH - blockH;
 
-    int textWidth = MeasureText(ms->label, fontSize);
-    DrawRectangle(0, screenHeight - blockHeight, textWidth + textPadding, blockHeight, ms->bg);
-    DrawText(ms->label, textPadding / 2, screenHeight - blockHeight + (blockHeight - fontSize) / 2,
-             fontSize, ms->fg);
+    DrawRectangle(0, blockY, blockW, blockH, ms->bg);
+    DrawTextEx(ec->font, ms->label, (Vector2){paddingX / 2, blockY + (paddingY / 2)}, ec->fontSize,
+               0, ms->fg);
 }

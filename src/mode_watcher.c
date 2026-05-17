@@ -7,6 +7,7 @@
 
 ModeWatcher* mw;
 
+// FIXME: not covered by theme, find out how
 static const ModeStyle MODE_STYLES[] = {
     [MODE_NORMAL] = {.bg = {97, 175, 239, 255}, .fg = {40, 44, 52, 255}, .label = "NORMAL"},
     [MODE_INSERT] = {.bg = {198, 120, 221, 255}, .fg = {40, 44, 52, 255}, .label = "INSERT"},

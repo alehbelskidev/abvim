@@ -4,9 +4,17 @@
 #include <raylib.h>
 
 typedef struct {
+    Color neutral;
+    Color primary;
+    Color secondary;
+    Color tertiary;
+} Theme;
+
+typedef struct {
     Font font;
     char fontPath[512];
     int fontSize;
+    Theme theme;
 } EditorConfig;
 
 EditorConfig* EC_Init();

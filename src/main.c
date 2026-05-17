@@ -19,7 +19,7 @@ int main(void)
         BeginDrawing();
 
         // FRAME
-        ClearBackground(BLACK);
+        ClearBackground(config->theme.neutral);
         MW_Draw(config);
         // END FRAME
 

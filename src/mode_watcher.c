@@ -43,14 +43,15 @@ void MW_Draw(const EditorConfig* ec)
     ModeStyle* ms = &mw->modeStyle;
     int screenH = GetScreenHeight();
 
-    int paddingX = 16;
-    int paddingY = 8;
     Vector2 textSize = MeasureTextEx(ec->font, ms->label, ec->fontSize, 0);
-    int blockH = textSize.y + paddingY / 2;
-    int blockW = textSize.x + paddingX;
-    int blockY = screenH - blockH;
+    float paddingX = textSize.x * 0.5f;
+    float paddingY = paddingX / 2.0f;
+    float blockH = textSize.y + paddingY;
+    float blockW = textSize.x + paddingX;
+    float blockY = screenH - blockH;
 
     DrawRectangle(0, blockY, blockW, blockH, ms->bg);
-    DrawTextEx(ec->font, ms->label, (Vector2){paddingX / 2, blockY + (paddingY / 2)}, ec->fontSize,
-               0, ms->fg);
+    DrawTextEx(ec->font, ms->label,
+               (Vector2){paddingX / 2, blockY + (blockH / 2) - (textSize.y / 2)}, ec->fontSize, 0,
+               ms->fg);
 }

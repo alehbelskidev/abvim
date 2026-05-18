@@ -14,15 +14,21 @@ int main(void)
     InitWindow(screenWidth, screenHeight, "ABVIM");
     SetTargetFPS(60);
     EC_LoadFont(config);
+    float screenH = GetScreenHeight();
+
+    MW_Calc(config, screenH);
 
     while (!WindowShouldClose()) {
-        BeginDrawing();
+        if (screenH != GetScreenHeight() || MW_ShouldReCalc()) {
+            screenH = GetScreenHeight();
+            MW_Calc(config, screenH);
+        }
 
+        BeginDrawing();
         // FRAME
         ClearBackground(config->theme.neutral);
         MW_Draw(config);
         // END FRAME
-
         EndDrawing();
     }
 

@@ -2,8 +2,10 @@
 #define MODE_WATCHER_H
 
 #include <raylib.h>
+#include <stdbool.h>
 
 #include "editor_config.h"
+#include "layout.h"
 
 typedef enum {
     MODE_NORMAL,
@@ -25,12 +27,18 @@ typedef struct {
 typedef struct {
     Mode mode;
     ModeStyle modeStyle;
+
+    BlockLayout layout;
+    Vector2 fontSize;
+    bool isDirty;
 } ModeWatcher;
 
 void MW_Init();
 void MW_FREE();
 
 void MW_SetMode(Mode m);
+void MW_Calc(const EditorConfig* ec, float screenH);
+bool MW_ShouldReCalc();
 void MW_Draw(const EditorConfig* ec);
 
 #endif  // !MODE_WATCHER_H

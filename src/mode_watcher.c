@@ -1,9 +1,11 @@
 #include "mode_watcher.h"
 
 #include <raylib.h>
+#include <stdbool.h>
 #include <stdlib.h>
 
 #include "editor_config.h"
+#include "layout.h"
 
 ModeWatcher* mw;
 
@@ -20,7 +22,7 @@ static const ModeStyle MODE_STYLES[] = {
 
 void MW_Init()
 {
-    mw = malloc(sizeof(ModeWatcher));
+    mw = calloc(1, sizeof(ModeWatcher));
     if (mw != NULL) {
         mw->mode = MODE_NORMAL;
         mw->modeStyle = MODE_STYLES[mw->mode];
@@ -37,22 +39,39 @@ void MW_SetMode(Mode m)
 {
     mw->mode = m;
     mw->modeStyle = MODE_STYLES[mw->mode];
+    mw->isDirty = true;
+}
+
+void MW_Calc(const EditorConfig* ec, float screenH)
+{
+    Vector2 fontSize = MeasureTextEx(ec->font, mw->modeStyle.label, ec->fontSize, 0);
+    float paddingX = fontSize.x * 0.5f;
+    float paddingY = paddingX / 2.0f;
+    float blockH = fontSize.y + paddingY;
+    float blockW = fontSize.x + paddingX;
+    float blockY = screenH - blockH;
+
+    mw->layout = (BlockLayout){
+        .padding = {paddingX, paddingY},
+        .size = {blockW, blockH},
+        .offset = {0, blockY},
+    };
+    mw->fontSize = fontSize;
+    mw->isDirty = false;
+}
+
+bool MW_ShouldReCalc()
+{
+    return mw->isDirty;
 }
 
 void MW_Draw(const EditorConfig* ec)
 {
     ModeStyle* ms = &mw->modeStyle;
-    int screenH = GetScreenHeight();
+    BlockLayout* l = &mw->layout;
 
-    Vector2 textSize = MeasureTextEx(ec->font, ms->label, ec->fontSize, 0);
-    float paddingX = textSize.x * 0.5f;
-    float paddingY = paddingX / 2.0f;
-    float blockH = textSize.y + paddingY;
-    float blockW = textSize.x + paddingX;
-    float blockY = screenH - blockH;
+    DrawRectangle(l->offset.x, l->offset.y, l->size.x, l->size.y, ms->bg);
 
-    DrawRectangle(0, blockY, blockW, blockH, ms->bg);
-    DrawTextEx(ec->font, ms->label,
-               (Vector2){paddingX / 2, blockY + (blockH / 2) - (textSize.y / 2)}, ec->fontSize, 0,
-               ms->fg);
+    Vector2 textPos = {l->padding.x / 2, l->offset.y + (l->size.y / 2) - (mw->fontSize.y / 2)};
+    DrawTextEx(ec->font, ms->label, textPos, ec->fontSize, 0, ms->fg);
 }

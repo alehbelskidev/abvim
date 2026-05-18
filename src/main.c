@@ -1,27 +1,32 @@
+#include <raylib.h>
+
 #include "editor_config.h"
+#include "layout.h"
 #include "mode_watcher.h"
-#include "raylib.h"
 
 int main(void)
 {
     EditorConfig* config = EC_Init();
     MW_Init();
 
-    const int screenWidth = 800;
-    const int screenHeight = 450;
+    const int DEFAULT_SCREEN_W = 800;
+    const int DEFAULT_SCREEN_H = 450;
 
     SetWindowState(FLAG_WINDOW_RESIZABLE);
-    InitWindow(screenWidth, screenHeight, "ABVIM");
+    InitWindow(DEFAULT_SCREEN_W, DEFAULT_SCREEN_H, "ABVIM");
     SetTargetFPS(60);
-    EC_LoadFont(config);
-    float screenH = GetScreenHeight();
 
-    MW_Calc(config, screenH);
+    LayoutContext* ctx = CTX_Init();
+    EC_LoadFont(config);
+    MW_Calc(config, ctx);
 
     while (!WindowShouldClose()) {
-        if (screenH != GetScreenHeight() || MW_ShouldReCalc()) {
-            screenH = GetScreenHeight();
-            MW_Calc(config, screenH);
+        if (CTX_ShouldUpdate(ctx)) {
+            CTX_Update(ctx);
+            MW_Calc(config, ctx);
+        }
+        if (MW_ShouldReCalc()) {
+            MW_Calc(config, ctx);
         }
 
         BeginDrawing();
@@ -34,6 +39,10 @@ int main(void)
 
     EC_UnloadFont(config);
     CloseWindow();
+
+    EC_FREE(config);
+    MW_FREE();
+    CTX_FREE(ctx);
 
     return 0;
 }

@@ -37,7 +37,7 @@ void MW_Init();
 void MW_FREE();
 
 void MW_SetMode(Mode m);
-void MW_Calc(const EditorConfig* ec, float screenH);
+void MW_Calc(const EditorConfig* ec, const LayoutContext* ctx);
 bool MW_ShouldReCalc();
 void MW_Draw(const EditorConfig* ec);
 

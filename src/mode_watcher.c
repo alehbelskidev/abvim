@@ -42,14 +42,14 @@ void MW_SetMode(Mode m)
     mw->isDirty = true;
 }
 
-void MW_Calc(const EditorConfig* ec, float screenH)
+void MW_Calc(const EditorConfig* ec, const LayoutContext* ctx)
 {
     Vector2 fontSize = MeasureTextEx(ec->font, mw->modeStyle.label, ec->fontSize, 0);
     float paddingX = fontSize.x * 0.5f;
     float paddingY = paddingX / 2.0f;
     float blockH = fontSize.y + paddingY;
     float blockW = fontSize.x + paddingX;
-    float blockY = screenH - blockH;
+    float blockY = ctx->screenH - blockH;
 
     mw->layout = (BlockLayout){
         .padding = {paddingX, paddingY},

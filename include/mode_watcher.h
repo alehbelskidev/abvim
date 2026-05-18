@@ -31,14 +31,16 @@ typedef struct {
     BlockLayout layout;
     Vector2 fontSize;
     bool isDirty;
+    float roundness;
+    int segments;
 } ModeWatcher;
 
-void MW_Init();
+void MW_Init(EditorConfig* c);
 void MW_FREE();
 
 void MW_SetMode(Mode m);
-void MW_Calc(const EditorConfig* ec, const LayoutContext* ctx);
+void MW_Calc(const EditorConfig* c, LayoutContext* ctx);
 bool MW_ShouldReCalc();
-void MW_Draw(const EditorConfig* ec);
+void MW_Draw(const EditorConfig* c);
 
 #endif  // !MODE_WATCHER_H

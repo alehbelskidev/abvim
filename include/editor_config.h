@@ -14,6 +14,9 @@ typedef struct {
     Font font;
     char fontPath[512];
     int fontSize;
+    float roundness;
+    float lineThick;
+    int segments;
     Theme theme;
 } EditorConfig;
 

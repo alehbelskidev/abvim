@@ -30,6 +30,9 @@ EditorConfig* EC_Init()
             .secondary = {39, 39, 42, 255},
             .tertiary = {82, 82, 91, 255},
         };
+        ec->lineThick = 1.5f;
+        ec->roundness = 0.3f;
+        ec->segments = 8;
 
         char path[512];
         joinPath(path, sizeof(path));

@@ -13,6 +13,9 @@ typedef struct {
 typedef struct {
     float screenW;
     float screenH;
+    // Dirty :(((())))
+    float infoLineH;
+    Vector2 infoLIneOffset;
 } LayoutContext;
 
 LayoutContext* CTX_Init();

@@ -6,6 +6,7 @@
 
 #include "editor_config.h"
 #include "layout.h"
+#include "mode_watcher.h"
 
 ModeBadge* self;
 
@@ -20,11 +21,11 @@ static const ModeStyle MODE_STYLES[] = {
     [MODE_COMMAND] = {.bg = {152, 195, 121, 255}, .fg = {40, 44, 52, 255}, .label = "COMMAND"},
     [MODE_COMMAND_LINE] = {.bg = {86, 182, 194, 255}, .fg = {40, 44, 52, 255}, .label = "C-LINE"}};
 
-void MB_Init(EditorConfig* c)
+void MB_Init(EditorConfig* c, ModeWatcher* mw)
 {
     self = calloc(1, sizeof(ModeBadge));
     if (self != NULL) {
-        self->mode = MODE_NORMAL;
+        self->mode = mw->mode;
         self->modeStyle = MODE_STYLES[self->mode];
         self->roundness = c->roundness;
         self->segments = c->segments;
@@ -39,9 +40,11 @@ void MB_FREE()
 
 void MB_SetMode(Mode m)
 {
-    self->mode = m;
-    self->modeStyle = MODE_STYLES[self->mode];
-    self->isDirty = true;
+    if (self->mode != m) {
+        self->mode = m;
+        self->modeStyle = MODE_STYLES[m];
+        self->isDirty = true;
+    }
 }
 
 void MB_Calc(const EditorConfig* c, LayoutContext* ctx)
@@ -77,41 +80,4 @@ void MB_Draw(const EditorConfig* c)
     Vector2 textPos = {l->offset.x + l->padding.x / 2,
                        l->offset.y + (l->size.y / 2) - (self->fontSize.y / 2)};
     DrawTextEx(c->font, ms->label, textPos, c->fontSize, 0, ms->fg);
-}
-
-void MB_KeyEvent()
-{
-    if (self->mode == MODE_NORMAL) {
-        if (IsKeyPressed(KEY_I) || IsKeyPressed(KEY_A)) {
-            MB_SetMode(MODE_INSERT);
-        }
-        if (IsKeyPressed(KEY_R)) {
-            MB_SetMode(MODE_REPLACE);
-        }
-        if (IsKeyDown(KEY_LEFT_SHIFT) && IsKeyPressed(KEY_SEMICOLON)) {
-            MB_SetMode(MODE_COMMAND);
-        }
-
-        if (IsKeyPressed(KEY_V)) {
-            MB_SetMode(MODE_VISUAL);
-        }
-        if (IsKeyDown(KEY_LEFT_SHIFT) && IsKeyPressed(KEY_V)) {
-            MB_SetMode(MODE_VISUAL_LINE);
-        }
-        if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_V)) {
-            MB_SetMode(MODE_VISUAL_BLOCK);
-        }
-    }
-
-    if (self->mode == MODE_COMMAND_LINE && IsKeyPressed(KEY_ESCAPE)) {
-        MB_SetMode(MODE_COMMAND);
-    }
-
-    if (self->mode != MODE_NORMAL && self->mode != MODE_COMMAND_LINE && IsKeyPressed(KEY_ESCAPE)) {
-        MB_SetMode(MODE_NORMAL);
-    }
-
-    if (self->mode == MODE_COMMAND && IsKeyDown(KEY_LEFT_SHIFT) && IsKeyPressed(KEY_ONE)) {
-        MB_SetMode(MODE_COMMAND_LINE);
-    }
 }

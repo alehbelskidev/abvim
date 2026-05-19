@@ -4,11 +4,13 @@
 #include "info_line.h"
 #include "layout.h"
 #include "mode_badge.h"
+#include "mode_watcher.h"
 
 int main(void)
 {
     EditorConfig* config = EC_Init();
-    MB_Init(config);
+    ModeWatcher* mw = MW_Init();
+    MB_Init(config, mw);
     IL_Init(config);
 
     const int DEFAULT_SCREEN_W = 800;
@@ -26,7 +28,8 @@ int main(void)
     MB_Calc(config, ctx);
 
     while (!WindowShouldClose()) {
-        MB_KeyEvent();
+        MW_HandleModeChange(mw);
+        MB_SetMode(mw->mode);
 
         if (CTX_ShouldUpdate(ctx)) {
             CTX_Update(ctx);

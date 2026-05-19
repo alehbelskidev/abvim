@@ -6,17 +6,7 @@
 
 #include "editor_config.h"
 #include "layout.h"
-
-typedef enum {
-    MODE_NORMAL,
-    MODE_INSERT,
-    MODE_REPLACE,
-    MODE_VISUAL,
-    MODE_VISUAL_BLOCK,
-    MODE_VISUAL_LINE,
-    MODE_COMMAND,
-    MODE_COMMAND_LINE,
-} Mode;
+#include "mode_watcher.h"
 
 typedef struct {
     Color bg;
@@ -25,9 +15,8 @@ typedef struct {
 } ModeStyle;
 
 typedef struct {
-    Mode mode;
     ModeStyle modeStyle;
-
+    Mode mode;
     BlockLayout layout;
     Vector2 fontSize;
     bool isDirty;
@@ -35,13 +24,12 @@ typedef struct {
     int segments;
 } ModeBadge;
 
-void MB_Init(EditorConfig* c);
+void MB_Init(EditorConfig* c, ModeWatcher* mw);
 void MB_FREE();
 
 void MB_SetMode(Mode m);
 void MB_Calc(const EditorConfig* c, LayoutContext* ctx);
 bool MB_ShouldReCalc();
 void MB_Draw(const EditorConfig* c);
-void MB_KeyEvent();
 
 #endif  // !MODE_BADGE_H

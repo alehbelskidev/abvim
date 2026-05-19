@@ -49,7 +49,7 @@ void MW_Calc(const EditorConfig* c, LayoutContext* ctx)
     Vector2 fontSize = MeasureTextEx(c->font, mw->modeStyle.label, c->fontSize, 0);
     float paddingX = fontSize.x * 0.5f;
     float paddingY = paddingX / 2.0f;
-    float blockH = fontSize.y + paddingY;
+    float blockH = ctx->infoLineH;
     float blockW = fontSize.x + paddingX;
 
     mw->layout = (BlockLayout){
@@ -59,8 +59,6 @@ void MW_Calc(const EditorConfig* c, LayoutContext* ctx)
     };
     mw->fontSize = fontSize;
     mw->isDirty = false;
-
-    ctx->infoLineH = blockH;
 }
 
 bool MW_ShouldReCalc()
@@ -79,4 +77,41 @@ void MW_Draw(const EditorConfig* c)
     Vector2 textPos = {l->offset.x + l->padding.x / 2,
                        l->offset.y + (l->size.y / 2) - (mw->fontSize.y / 2)};
     DrawTextEx(c->font, ms->label, textPos, c->fontSize, 0, ms->fg);
+}
+
+void MW_KeyEvent()
+{
+    if (mw->mode == MODE_NORMAL) {
+        if (IsKeyPressed(KEY_I) || IsKeyPressed(KEY_A)) {
+            MW_SetMode(MODE_INSERT);
+        }
+        if (IsKeyPressed(KEY_R)) {
+            MW_SetMode(MODE_REPLACE);
+        }
+        if (IsKeyDown(KEY_LEFT_SHIFT) && IsKeyPressed(KEY_SEMICOLON)) {
+            MW_SetMode(MODE_COMMAND);
+        }
+
+        if (IsKeyPressed(KEY_V)) {
+            MW_SetMode(MODE_VISUAL);
+        }
+        if (IsKeyDown(KEY_LEFT_SHIFT) && IsKeyPressed(KEY_V)) {
+            MW_SetMode(MODE_VISUAL_LINE);
+        }
+        if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_V)) {
+            MW_SetMode(MODE_VISUAL_BLOCK);
+        }
+    }
+
+    if (mw->mode == MODE_COMMAND_LINE && IsKeyPressed(KEY_ESCAPE)) {
+        MW_SetMode(MODE_COMMAND);
+    }
+
+    if (mw->mode != MODE_NORMAL && mw->mode != MODE_COMMAND_LINE && IsKeyPressed(KEY_ESCAPE)) {
+        MW_SetMode(MODE_NORMAL);
+    }
+
+    if (mw->mode == MODE_COMMAND && IsKeyDown(KEY_LEFT_SHIFT) && IsKeyPressed(KEY_ONE)) {
+        MW_SetMode(MODE_COMMAND_LINE);
+    }
 }

@@ -10,6 +10,7 @@ LayoutContext* CTX_Init()
     if (ctx != NULL) {
         ctx->screenW = GetScreenWidth();
         ctx->screenH = GetScreenHeight();
+        ctx->infoLineH = 30.0f;
     }
 
     return ctx;

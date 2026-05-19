@@ -42,5 +42,6 @@ void MW_SetMode(Mode m);
 void MW_Calc(const EditorConfig* c, LayoutContext* ctx);
 bool MW_ShouldReCalc();
 void MW_Draw(const EditorConfig* c);
+void MW_KeyEvent();
 
 #endif  // !MODE_WATCHER_H

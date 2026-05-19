@@ -16,6 +16,7 @@ int main(void)
 
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(DEFAULT_SCREEN_W, DEFAULT_SCREEN_H, "ABVIM");
+    SetExitKey(KEY_NULL);
     SetTargetFPS(60);
 
     LayoutContext* ctx = CTX_Init();
@@ -25,6 +26,8 @@ int main(void)
     MW_Calc(config, ctx);
 
     while (!WindowShouldClose()) {
+        MW_KeyEvent();
+
         if (CTX_ShouldUpdate(ctx)) {
             CTX_Update(ctx);
             IL_Calc(config, ctx);

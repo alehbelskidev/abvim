@@ -1,5 +1,5 @@
-#ifndef MODE_WATCHER_H
-#define MODE_WATCHER_H
+#ifndef MODE_BADGE_H
+#define MODE_BADGE_H
 
 #include <raylib.h>
 #include <stdbool.h>
@@ -33,15 +33,15 @@ typedef struct {
     bool isDirty;
     float roundness;
     int segments;
-} ModeWatcher;
+} ModeBadge;
 
-void MW_Init(EditorConfig* c);
-void MW_FREE();
+void MB_Init(EditorConfig* c);
+void MB_FREE();
 
-void MW_SetMode(Mode m);
-void MW_Calc(const EditorConfig* c, LayoutContext* ctx);
-bool MW_ShouldReCalc();
-void MW_Draw(const EditorConfig* c);
-void MW_KeyEvent();
+void MB_SetMode(Mode m);
+void MB_Calc(const EditorConfig* c, LayoutContext* ctx);
+bool MB_ShouldReCalc();
+void MB_Draw(const EditorConfig* c);
+void MB_KeyEvent();
 
-#endif  // !MODE_WATCHER_H
+#endif  // !MODE_BADGE_H

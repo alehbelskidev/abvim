@@ -1,4 +1,4 @@
-#include "mode_watcher.h"
+#include "mode_badge.h"
 
 #include <raylib.h>
 #include <stdbool.h>
@@ -7,7 +7,7 @@
 #include "editor_config.h"
 #include "layout.h"
 
-ModeWatcher* mw;
+ModeBadge* self;
 
 // FYI: not covered by theme, find out how
 static const ModeStyle MODE_STYLES[] = {
@@ -20,98 +20,98 @@ static const ModeStyle MODE_STYLES[] = {
     [MODE_COMMAND] = {.bg = {152, 195, 121, 255}, .fg = {40, 44, 52, 255}, .label = "COMMAND"},
     [MODE_COMMAND_LINE] = {.bg = {86, 182, 194, 255}, .fg = {40, 44, 52, 255}, .label = "C-LINE"}};
 
-void MW_Init(EditorConfig* c)
+void MB_Init(EditorConfig* c)
 {
-    mw = calloc(1, sizeof(ModeWatcher));
-    if (mw != NULL) {
-        mw->mode = MODE_NORMAL;
-        mw->modeStyle = MODE_STYLES[mw->mode];
-        mw->roundness = c->roundness;
-        mw->segments = c->segments;
+    self = calloc(1, sizeof(ModeBadge));
+    if (self != NULL) {
+        self->mode = MODE_NORMAL;
+        self->modeStyle = MODE_STYLES[self->mode];
+        self->roundness = c->roundness;
+        self->segments = c->segments;
     }
 }
-void MW_FREE()
+void MB_FREE()
 {
-    if (mw != NULL) {
-        free(mw);
+    if (self != NULL) {
+        free(self);
     }
 }
 
-void MW_SetMode(Mode m)
+void MB_SetMode(Mode m)
 {
-    mw->mode = m;
-    mw->modeStyle = MODE_STYLES[mw->mode];
-    mw->isDirty = true;
+    self->mode = m;
+    self->modeStyle = MODE_STYLES[self->mode];
+    self->isDirty = true;
 }
 
-void MW_Calc(const EditorConfig* c, LayoutContext* ctx)
+void MB_Calc(const EditorConfig* c, LayoutContext* ctx)
 {
-    Vector2 fontSize = MeasureTextEx(c->font, mw->modeStyle.label, c->fontSize, 0);
+    Vector2 fontSize = MeasureTextEx(c->font, self->modeStyle.label, c->fontSize, 0);
     float paddingX = fontSize.x * 0.5f;
     float paddingY = paddingX / 2.0f;
     float blockH = ctx->infoLineH;
     float blockW = fontSize.x + paddingX;
 
-    mw->layout = (BlockLayout){
+    self->layout = (BlockLayout){
         .padding = {paddingX, paddingY},
         .size = {blockW, blockH},
         .offset = {ctx->infoLIneOffset.x, ctx->infoLIneOffset.y},
     };
-    mw->fontSize = fontSize;
-    mw->isDirty = false;
+    self->fontSize = fontSize;
+    self->isDirty = false;
 }
 
-bool MW_ShouldReCalc()
+bool MB_ShouldReCalc()
 {
-    return mw->isDirty;
+    return self->isDirty;
 }
 
-void MW_Draw(const EditorConfig* c)
+void MB_Draw(const EditorConfig* c)
 {
-    ModeStyle* ms = &mw->modeStyle;
-    BlockLayout* l = &mw->layout;
+    ModeStyle* ms = &self->modeStyle;
+    BlockLayout* l = &self->layout;
 
     Rectangle rect = {l->offset.x, l->offset.y, l->size.x, l->size.y};
-    DrawRectangleRounded(rect, mw->roundness, mw->segments, ms->bg);
+    DrawRectangleRounded(rect, self->roundness, self->segments, ms->bg);
 
     Vector2 textPos = {l->offset.x + l->padding.x / 2,
-                       l->offset.y + (l->size.y / 2) - (mw->fontSize.y / 2)};
+                       l->offset.y + (l->size.y / 2) - (self->fontSize.y / 2)};
     DrawTextEx(c->font, ms->label, textPos, c->fontSize, 0, ms->fg);
 }
 
-void MW_KeyEvent()
+void MB_KeyEvent()
 {
-    if (mw->mode == MODE_NORMAL) {
+    if (self->mode == MODE_NORMAL) {
         if (IsKeyPressed(KEY_I) || IsKeyPressed(KEY_A)) {
-            MW_SetMode(MODE_INSERT);
+            MB_SetMode(MODE_INSERT);
         }
         if (IsKeyPressed(KEY_R)) {
-            MW_SetMode(MODE_REPLACE);
+            MB_SetMode(MODE_REPLACE);
         }
         if (IsKeyDown(KEY_LEFT_SHIFT) && IsKeyPressed(KEY_SEMICOLON)) {
-            MW_SetMode(MODE_COMMAND);
+            MB_SetMode(MODE_COMMAND);
         }
 
         if (IsKeyPressed(KEY_V)) {
-            MW_SetMode(MODE_VISUAL);
+            MB_SetMode(MODE_VISUAL);
         }
         if (IsKeyDown(KEY_LEFT_SHIFT) && IsKeyPressed(KEY_V)) {
-            MW_SetMode(MODE_VISUAL_LINE);
+            MB_SetMode(MODE_VISUAL_LINE);
         }
         if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_V)) {
-            MW_SetMode(MODE_VISUAL_BLOCK);
+            MB_SetMode(MODE_VISUAL_BLOCK);
         }
     }
 
-    if (mw->mode == MODE_COMMAND_LINE && IsKeyPressed(KEY_ESCAPE)) {
-        MW_SetMode(MODE_COMMAND);
+    if (self->mode == MODE_COMMAND_LINE && IsKeyPressed(KEY_ESCAPE)) {
+        MB_SetMode(MODE_COMMAND);
     }
 
-    if (mw->mode != MODE_NORMAL && mw->mode != MODE_COMMAND_LINE && IsKeyPressed(KEY_ESCAPE)) {
-        MW_SetMode(MODE_NORMAL);
+    if (self->mode != MODE_NORMAL && self->mode != MODE_COMMAND_LINE && IsKeyPressed(KEY_ESCAPE)) {
+        MB_SetMode(MODE_NORMAL);
     }
 
-    if (mw->mode == MODE_COMMAND && IsKeyDown(KEY_LEFT_SHIFT) && IsKeyPressed(KEY_ONE)) {
-        MW_SetMode(MODE_COMMAND_LINE);
+    if (self->mode == MODE_COMMAND && IsKeyDown(KEY_LEFT_SHIFT) && IsKeyPressed(KEY_ONE)) {
+        MB_SetMode(MODE_COMMAND_LINE);
     }
 }

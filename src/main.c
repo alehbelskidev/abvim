@@ -3,12 +3,12 @@
 #include "editor_config.h"
 #include "info_line.h"
 #include "layout.h"
-#include "mode_watcher.h"
+#include "mode_badge.h"
 
 int main(void)
 {
     EditorConfig* config = EC_Init();
-    MW_Init(config);
+    MB_Init(config);
     IL_Init(config);
 
     const int DEFAULT_SCREEN_W = 800;
@@ -23,25 +23,25 @@ int main(void)
     EC_LoadFont(config);
 
     IL_Calc(config, ctx);
-    MW_Calc(config, ctx);
+    MB_Calc(config, ctx);
 
     while (!WindowShouldClose()) {
-        MW_KeyEvent();
+        MB_KeyEvent();
 
         if (CTX_ShouldUpdate(ctx)) {
             CTX_Update(ctx);
             IL_Calc(config, ctx);
-            MW_Calc(config, ctx);
+            MB_Calc(config, ctx);
         }
-        if (MW_ShouldReCalc()) {
-            MW_Calc(config, ctx);
+        if (MB_ShouldReCalc()) {
+            MB_Calc(config, ctx);
         }
 
         BeginDrawing();
         // FRAME
         ClearBackground(config->theme.neutral);
         IL_Draw(config);
-        MW_Draw(config);
+        MB_Draw(config);
         // END FRAME
         EndDrawing();
     }
@@ -50,7 +50,7 @@ int main(void)
     CloseWindow();
 
     EC_FREE(config);
-    MW_FREE();
+    MB_FREE();
     CTX_FREE(ctx);
 
     return 0;

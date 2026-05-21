@@ -21,6 +21,6 @@ typedef struct {
 
 ModeWatcher* MW_Init();
 void MW_FREE(ModeWatcher* mw);
-void MW_HandleModeChange(ModeWatcher* self);
+void MW_HandleModeChange(ModeWatcher* mw);
 
 #endif  // !MODE_WATCHER_H

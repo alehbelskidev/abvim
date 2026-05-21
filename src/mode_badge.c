@@ -2,13 +2,10 @@
 
 #include <raylib.h>
 #include <stdbool.h>
-#include <stdlib.h>
 
 #include "editor_config.h"
 #include "layout.h"
 #include "mode_watcher.h"
-
-ModeBadge* self;
 
 // FYI: not covered by theme, find out how
 static const ModeStyle MODE_STYLES[] = {
@@ -27,63 +24,27 @@ static const ModeStyle MODE_STYLES[] = {
     [MODE_OPEN] = {.bg = {200, 200, 210, 255}, .fg = {40, 44, 52, 255}, .label = "Open"},
 };
 
-void MB_Init(EditorConfig* c, ModeWatcher* mw)
+BlockLayout MB_Draw(const EditorConfig* config, const BlockLayout boundries, Mode mode)
 {
-    self = calloc(1, sizeof(ModeBadge));
-    if (self != NULL) {
-        self->mode = mw->mode;
-        self->modeStyle = MODE_STYLES[self->mode];
-        self->roundness = c->roundness;
-        self->segments = c->segments;
-    }
-}
-void MB_FREE()
-{
-    if (self != NULL) {
-        free(self);
-    }
-}
-
-void MB_SetMode(Mode m)
-{
-    if (self->mode != m) {
-        self->mode = m;
-        self->modeStyle = MODE_STYLES[m];
-        self->isDirty = true;
-    }
-}
-
-void MB_Calc(const EditorConfig* c, LayoutContext* ctx)
-{
-    Vector2 fontSize = MeasureTextEx(c->font, self->modeStyle.label, c->fontSize, 0);
+    ModeStyle modeStyle = MODE_STYLES[mode];
+    Vector2 fontSize = MeasureTextEx(config->font, modeStyle.label, config->fontSize, 0);
     float paddingX = fontSize.x * 0.5f;
     float paddingY = paddingX / 2.0f;
-    float blockH = ctx->infoLineH;
+    float blockH = boundries.size.y;
     float blockW = fontSize.x + paddingX;
 
-    self->layout = (BlockLayout){
+    BlockLayout layout = {
         .padding = {paddingX, paddingY},
         .size = {blockW, blockH},
-        .offset = {ctx->infoLIneOffset.x, ctx->infoLIneOffset.y},
+        .offset = {boundries.offset.x, boundries.offset.y},
     };
-    self->fontSize = fontSize;
-    self->isDirty = false;
-}
 
-bool MB_ShouldReCalc()
-{
-    return self->isDirty;
-}
+    Rectangle rect = {layout.offset.x, layout.offset.y, layout.size.x, layout.size.y};
+    DrawRectangleRounded(rect, config->roundness, config->segments, modeStyle.bg);
 
-void MB_Draw(const EditorConfig* c)
-{
-    ModeStyle* ms = &self->modeStyle;
-    BlockLayout* l = &self->layout;
+    Vector2 textPos = {layout.offset.x + layout.padding.x / 2,
+                       layout.offset.y + (layout.size.y / 2) - (fontSize.y / 2)};
+    DrawTextEx(config->font, modeStyle.label, textPos, config->fontSize, 0, modeStyle.fg);
 
-    Rectangle rect = {l->offset.x, l->offset.y, l->size.x, l->size.y};
-    DrawRectangleRounded(rect, self->roundness, self->segments, ms->bg);
-
-    Vector2 textPos = {l->offset.x + l->padding.x / 2,
-                       l->offset.y + (l->size.y / 2) - (self->fontSize.y / 2)};
-    DrawTextEx(c->font, ms->label, textPos, c->fontSize, 0, ms->fg);
+    return layout;
 }

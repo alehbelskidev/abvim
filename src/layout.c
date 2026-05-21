@@ -5,12 +5,12 @@
 
 LayoutContext* CTX_Init()
 {
-    LayoutContext* ctx = malloc(sizeof(LayoutContext));
+    LayoutContext* ctx = calloc(1, sizeof(LayoutContext));
 
     if (ctx != NULL) {
-        ctx->screenW = GetScreenWidth();
-        ctx->screenH = GetScreenHeight();
-        ctx->infoLineH = 30.0f;
+        ctx->layout.size.x = GetScreenWidth();
+        ctx->layout.size.y = GetScreenHeight();
+        ctx->layout.padding = (Vector2){16, 16};
     }
 
     return ctx;
@@ -25,11 +25,11 @@ void CTX_FREE(LayoutContext* ctx)
 
 void CTX_Update(LayoutContext* ctx)
 {
-    ctx->screenH = GetScreenHeight();
-    ctx->screenW = GetScreenWidth();
+    ctx->layout.size.x = GetScreenHeight();
+    ctx->layout.size.y = GetScreenWidth();
 }
 
 bool CTX_ShouldUpdate(LayoutContext* ctx)
 {
-    return ctx->screenW != GetScreenWidth() || ctx->screenH != GetScreenHeight();
+    return ctx->layout.size.x != GetScreenWidth() || ctx->layout.size.y != GetScreenHeight();
 }

@@ -5,63 +5,63 @@
 
 ModeWatcher* MW_Init()
 {
-    ModeWatcher* self = malloc(sizeof(ModeWatcher));
-    if (self != NULL) {
-        self->mode = MODE_WELCOME;
+    ModeWatcher* mw = malloc(sizeof(ModeWatcher));
+    if (mw != NULL) {
+        mw->mode = MODE_WELCOME;
     }
 
-    return self;
+    return mw;
 }
 
-void MW_FREE(ModeWatcher* self)
+void MW_FREE(ModeWatcher* mw)
 {
-    if (self != NULL) {
-        free(self);
+    if (mw != NULL) {
+        free(mw);
     }
 }
 
 // TODO: for normal mode check if file is open in order to perform mode switch
 // TODO: think about system mode for open directories set projects, anchors etc
 // this system mode should replace Welcome/Open
-void MW_HandleModeChange(ModeWatcher* self)
+void MW_HandleModeChange(ModeWatcher* mw)
 {
-    if (self->mode == MODE_NORMAL) {
+    if (mw->mode == MODE_NORMAL) {
         if (IsKeyPressed(KEY_I) || IsKeyPressed(KEY_A)) {
-            self->mode = MODE_INSERT;
+            mw->mode = MODE_INSERT;
         }
         if (IsKeyPressed(KEY_R)) {
-            self->mode = MODE_REPLACE;
+            mw->mode = MODE_REPLACE;
         }
         if (IsKeyDown(KEY_LEFT_SHIFT) && IsKeyPressed(KEY_SEMICOLON)) {
-            self->mode = MODE_COMMAND;
+            mw->mode = MODE_COMMAND;
         }
 
         if (IsKeyPressed(KEY_V)) {
-            self->mode = MODE_VISUAL;
+            mw->mode = MODE_VISUAL;
         }
         if (IsKeyDown(KEY_LEFT_SHIFT) && IsKeyPressed(KEY_V)) {
-            self->mode = MODE_VISUAL_LINE;
+            mw->mode = MODE_VISUAL_LINE;
         }
         if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_V)) {
-            self->mode = MODE_VISUAL_BLOCK;
+            mw->mode = MODE_VISUAL_BLOCK;
         }
     }
 
-    if (self->mode != MODE_NORMAL) {
-        if (self->mode == MODE_COMMAND_LINE && IsKeyPressed(KEY_ESCAPE)) {
-            self->mode = MODE_COMMAND;
+    if (mw->mode != MODE_NORMAL) {
+        if (mw->mode == MODE_COMMAND_LINE && IsKeyPressed(KEY_ESCAPE)) {
+            mw->mode = MODE_COMMAND;
         }
 
-        if (self->mode != MODE_COMMAND_LINE && IsKeyPressed(KEY_ESCAPE)) {
-            self->mode = MODE_NORMAL;
+        if (mw->mode != MODE_COMMAND_LINE && IsKeyPressed(KEY_ESCAPE)) {
+            mw->mode = MODE_NORMAL;
         }
 
-        if (self->mode == MODE_COMMAND && IsKeyDown(KEY_LEFT_SHIFT) && IsKeyPressed(KEY_ONE)) {
-            self->mode = MODE_COMMAND_LINE;
+        if (mw->mode == MODE_COMMAND && IsKeyDown(KEY_LEFT_SHIFT) && IsKeyPressed(KEY_ONE)) {
+            mw->mode = MODE_COMMAND_LINE;
         }
     }
 
     if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_O)) {
-        self->mode = MODE_OPEN;
+        mw->mode = MODE_OPEN;
     }
 }

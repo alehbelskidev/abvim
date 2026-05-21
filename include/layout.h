@@ -8,13 +8,11 @@ typedef struct {
     Vector2 padding;
     Vector2 offset;
     Vector2 size;
+    Vector2 maxSize;
 } BlockLayout;
 
 typedef struct {
-    float screenW;
-    float screenH;
-    float infoLineH;
-    Vector2 infoLIneOffset;
+    BlockLayout layout;
 } LayoutContext;
 
 LayoutContext* CTX_Init();

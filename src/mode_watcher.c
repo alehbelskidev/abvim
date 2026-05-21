@@ -7,7 +7,7 @@ ModeWatcher* MW_Init()
 {
     ModeWatcher* self = malloc(sizeof(ModeWatcher));
     if (self != NULL) {
-        self->mode = MODE_NORMAL;
+        self->mode = MODE_WELCOME;
     }
 
     return self;
@@ -20,6 +20,9 @@ void MW_FREE(ModeWatcher* self)
     }
 }
 
+// TODO: for normal mode check if file is open in order to perform mode switch
+// TODO: think about system mode for open directories set projects, anchors etc
+// this system mode should replace Welcome/Open
 void MW_HandleModeChange(ModeWatcher* self)
 {
     if (self->mode == MODE_NORMAL) {
@@ -44,15 +47,21 @@ void MW_HandleModeChange(ModeWatcher* self)
         }
     }
 
-    if (self->mode == MODE_COMMAND_LINE && IsKeyPressed(KEY_ESCAPE)) {
-        self->mode = MODE_COMMAND;
+    if (self->mode != MODE_NORMAL) {
+        if (self->mode == MODE_COMMAND_LINE && IsKeyPressed(KEY_ESCAPE)) {
+            self->mode = MODE_COMMAND;
+        }
+
+        if (self->mode != MODE_COMMAND_LINE && IsKeyPressed(KEY_ESCAPE)) {
+            self->mode = MODE_NORMAL;
+        }
+
+        if (self->mode == MODE_COMMAND && IsKeyDown(KEY_LEFT_SHIFT) && IsKeyPressed(KEY_ONE)) {
+            self->mode = MODE_COMMAND_LINE;
+        }
     }
 
-    if (self->mode != MODE_NORMAL && self->mode != MODE_COMMAND_LINE && IsKeyPressed(KEY_ESCAPE)) {
-        self->mode = MODE_NORMAL;
-    }
-
-    if (self->mode == MODE_COMMAND && IsKeyDown(KEY_LEFT_SHIFT) && IsKeyPressed(KEY_ONE)) {
-        self->mode = MODE_COMMAND_LINE;
+    if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_O)) {
+        self->mode = MODE_OPEN;
     }
 }

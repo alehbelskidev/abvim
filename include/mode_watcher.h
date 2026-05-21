@@ -10,6 +10,9 @@ typedef enum {
     MODE_VISUAL_LINE,
     MODE_COMMAND,
     MODE_COMMAND_LINE,
+
+    MODE_WELCOME,
+    MODE_OPEN,
 } Mode;
 
 typedef struct {

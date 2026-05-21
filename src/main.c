@@ -20,20 +20,17 @@ int main(void)
     SetExitKey(KEY_NULL);
     SetTargetFPS(60);
 
-    LayoutContext* ctx = CTX_Init();
     EC_LoadFont(config);
+
+    BlockLayout root = {{16, 16}, {0, 0}, {GetScreenWidth(), GetScreenHeight()}};
 
     while (!WindowShouldClose()) {
         MW_HandleModeChange(mw);
 
-        if (CTX_ShouldUpdate(ctx)) {
-            CTX_Update(ctx);
-        }
-
         BeginDrawing();
         ClearBackground(config->theme.neutral);
 
-        BlockLayout infoLine = IL_Draw(config, ctx->layout);
+        BlockLayout infoLine = IL_Draw(config, root);
         MB_Draw(config, infoLine, mw->mode);
 
         EndDrawing();
@@ -43,7 +40,6 @@ int main(void)
     CloseWindow();
 
     EC_FREE(config);
-    CTX_FREE(ctx);
 
     return 0;
 }

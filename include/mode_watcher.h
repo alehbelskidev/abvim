@@ -15,12 +15,8 @@ typedef enum {
     MODE_OPEN,
 } Mode;
 
-typedef struct {
-    Mode mode;
-} ModeWatcher;
+static Mode CURRENT_MODE;
 
-ModeWatcher* MW_Init();
-void MW_FREE(ModeWatcher* mw);
-void MW_HandleModeChange(ModeWatcher* mw);
+void MW_HandleModeChange();
 
 #endif  // !MODE_WATCHER_H

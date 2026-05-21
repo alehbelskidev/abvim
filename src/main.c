@@ -10,7 +10,6 @@
 int main(void)
 {
     EditorConfig* config = EC_Init();
-    ModeWatcher* mw = MW_Init();
 
     const int DEFAULT_SCREEN_W = 800;
     const int DEFAULT_SCREEN_H = 450;
@@ -25,13 +24,14 @@ int main(void)
     BlockLayout root = {{16, 16}, {0, 0}, {GetScreenWidth(), GetScreenHeight()}};
 
     while (!WindowShouldClose()) {
-        MW_HandleModeChange(mw);
+        root.size = (Vector2){GetScreenWidth(), GetScreenHeight()};
+        MW_HandleModeChange();
 
         BeginDrawing();
         ClearBackground(config->theme.neutral);
 
         BlockLayout infoLine = IL_Draw(config, root);
-        MB_Draw(config, infoLine, mw->mode);
+        MB_Draw(config, infoLine, CURRENT_MODE);
 
         EndDrawing();
     }

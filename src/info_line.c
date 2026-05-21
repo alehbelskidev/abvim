@@ -1,47 +1,20 @@
 #include "info_line.h"
 
 #include <raylib.h>
-#include <stdlib.h>
 
-InfoLine* il;
+#include "layout.h"
 
-void IL_Init(EditorConfig* c)
+BlockLayout IL_Draw(EditorConfig* config, BlockLayout boundries)
 {
-    il = calloc(1, sizeof(InfoLine));
-    if (il != NULL) {
-        il->layout.padding.x = 20;
-        il->layout.padding.y = 20;
-        il->lineThick = c->lineThick;
-        il->roundness = c->roundness;
-        il->segments = c->lineThick;
-    }
-}
+    float sizeY = 30;
+    float sizeX = GetScreenWidth() - boundries.padding.x * 2;
+    float offsetX = boundries.offset.x + boundries.padding.x;
+    float offsetY = (boundries.offset.y + GetScreenHeight()) - boundries.padding.y - sizeY;
 
-void IL_FREE(InfoLine* il)
-{
-    if (il != NULL) {
-        free(il);
-    }
-}
+    DrawRectangleRounded((Rectangle){offsetX, offsetY, sizeX, sizeY}, config->roundness - 0.1,
+                         config->segments, config->theme.secondary);
+    DrawRectangleRoundedLinesEx((Rectangle){offsetX, offsetY, sizeX, sizeY}, config->roundness,
+                                config->segments, config->lineThick, config->theme.tertiary);
 
-void IL_Calc(EditorConfig* c, LayoutContext* ctx)
-{
-    BlockLayout* l = &il->layout;
-
-    l->size.y = ctx->infoLineH;
-    l->size.x = ctx->screenW - l->padding.x * 2;
-    l->offset.x = l->padding.x;
-    l->offset.y = ctx->screenH - l->padding.y - l->size.y;
-
-    ctx->infoLIneOffset = l->offset;
-}
-
-void IL_Draw(EditorConfig* c)
-{
-    BlockLayout* l = &il->layout;
-
-    DrawRectangleRounded((Rectangle){l->offset.x, l->offset.y, l->size.x, l->size.y},
-                         il->roundness - 0.1, il->segments, c->theme.secondary);
-    DrawRectangleRoundedLinesEx((Rectangle){l->offset.x, l->offset.y, l->size.x, l->size.y},
-                                il->roundness, il->segments, il->lineThick, c->theme.tertiary);
+    return (BlockLayout){.offset = {offsetX, offsetY}, .padding = {0, 0}, .size = {sizeX, sizeY}};
 }

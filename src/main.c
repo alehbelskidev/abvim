@@ -31,7 +31,7 @@ int main(void)
         ClearBackground(config->theme.neutral);
 
         BlockLayout infoLine = IL_Draw(config, root);
-        MB_Draw(config, infoLine, CURRENT_MODE);
+        MB_Draw(config, infoLine, MW_GetMode());
 
         EndDrawing();
     }

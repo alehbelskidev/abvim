@@ -51,3 +51,8 @@ void MW_HandleModeChange()
         CURRENT_MODE = MODE_OPEN;
     }
 }
+
+Mode MW_GetMode()
+{
+    return CURRENT_MODE;
+}

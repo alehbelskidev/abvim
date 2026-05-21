@@ -15,8 +15,7 @@ typedef enum {
     MODE_OPEN,
 } Mode;
 
-static Mode CURRENT_MODE;
-
 void MW_HandleModeChange();
+Mode MW_GetMode();
 
 #endif  // !MODE_WATCHER_H

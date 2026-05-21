@@ -4,7 +4,7 @@
 
 #include "layout.h"
 
-BlockLayout IL_Draw(EditorConfig* config, BlockLayout boundries)
+BlockLayout IL_Draw(EditorConfig* config, const BlockLayout boundries)
 {
     float sizeY = 30;
     float sizeX = GetScreenWidth() - boundries.padding.x * 2;

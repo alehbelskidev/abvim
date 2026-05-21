@@ -6,6 +6,6 @@
 #include "editor_config.h"
 #include "layout.h"
 
-BlockLayout IL_Draw(EditorConfig* cconfig, BlockLayout boundries);
+BlockLayout IL_Draw(EditorConfig* cconfig, const BlockLayout boundries);
 
 #endif  // !INFO_LINE_H

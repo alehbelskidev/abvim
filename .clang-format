@@ -11,7 +11,7 @@ BraceWrapping:
   AfterEnum: false
   BeforeElse: false
 
-ColumnLimit: 100
+ColumnLimit: 80
 
 AlignAfterOpenBracket: Align
 AlignOperands: true

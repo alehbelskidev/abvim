@@ -42,7 +42,9 @@ void MW_HandleModeChange()
             CURRENT_MODE = MODE_NORMAL;
         }
 
-        if (CURRENT_MODE == MODE_COMMAND && IsKeyDown(KEY_LEFT_SHIFT) && IsKeyPressed(KEY_ONE)) {
+        if (CURRENT_MODE == MODE_COMMAND && IsKeyDown(KEY_LEFT_SHIFT) &&
+            IsKeyPressed(KEY_ONE))
+        {
             CURRENT_MODE = MODE_COMMAND_LINE;
         }
     }

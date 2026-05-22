@@ -14,6 +14,7 @@ typedef struct {
     const char* label;
 } ModeStyle;
 
-BlockLayout MB_Draw(const EditorConfig* config, BlockLayout boundries, Mode mode);
+BlockLayout MB_Draw(const EditorConfig* config, BlockLayout boundries,
+                    Mode mode);
 
 #endif  // !MODE_BADGE_H

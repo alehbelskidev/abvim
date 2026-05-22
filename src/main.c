@@ -21,7 +21,8 @@ int main(void)
 
     EC_LoadFont(config);
 
-    BlockLayout root = {{16, 16}, {0, 0}, {GetScreenWidth(), GetScreenHeight()}};
+    BlockLayout root = {
+        {16, 16}, {0, 0}, {GetScreenWidth(), GetScreenHeight()}};
 
     while (!WindowShouldClose()) {
         root.size = (Vector2){GetScreenWidth(), GetScreenHeight()};

@@ -12,6 +12,7 @@ BlockLayout IL_Draw(EditorConfig* config, const BlockLayout boundries)
     float offsetY =
         (boundries.offset.y + GetScreenHeight()) - boundries.padding.y - sizeY;
 
+    // TODO: decide what to do with rounded rects
     DrawRectangleRounded((Rectangle){offsetX, offsetY, sizeX, sizeY},
                          config->roundness - 0.1, config->segments,
                          config->theme.secondary);

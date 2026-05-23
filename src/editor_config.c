@@ -31,7 +31,7 @@ EditorConfig* EC_Init()
             .tertiary = {82, 82, 91, 255},
         };
         ec->lineThick = 1.5f;
-        ec->roundness = 0.3f;
+        ec->roundness = 0.0f;
         ec->segments = 8;
 
         char path[512];

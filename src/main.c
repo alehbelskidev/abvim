@@ -6,6 +6,7 @@
 #include "layout.h"
 #include "mode_badge.h"
 #include "mode_watcher.h"
+#include "welcome.h"
 
 int main(void)
 {
@@ -24,12 +25,18 @@ int main(void)
     BlockLayout root = {
         {16, 16}, {0, 0}, {GetScreenWidth(), GetScreenHeight()}};
 
+    WS_Init();
+
     while (!WindowShouldClose()) {
         root.size = (Vector2){GetScreenWidth(), GetScreenHeight()};
         MW_HandleModeChange();
 
         BeginDrawing();
         ClearBackground(config->theme.neutral);
+
+        if (MW_GetMode() == MODE_WELCOME) {
+            WS_Draw(config, root);
+        }
 
         BlockLayout infoLine = IL_Draw(config, root);
         MB_Draw(config, infoLine, MW_GetMode());
@@ -41,6 +48,7 @@ int main(void)
     CloseWindow();
 
     EC_FREE(config);
+    WS_FREE();
 
     return 0;
 }

@@ -2,11 +2,12 @@
 
 #include <raylib.h>
 
+#include "ctx.h"
 #include "editor_config.h"
 #include "layout.h"
 
-const char* MENU_ITEMS[3] = {"Open File/Directory", "Config",
-                             "Recent Projects"};
+const char* MENU_ITEMS[3] = {"Open File/Directory (Ctrl + O)",
+                             "Config (Ctrl + C)", "Recent Projects (Ctrl + H)"};
 
 static Texture2D logoTexture;
 
@@ -22,7 +23,8 @@ void WS_FREE()
     UnloadTexture(logoTexture);
 }
 
-BlockLayout WS_Draw(const EditorConfig* config, BlockLayout boundries)
+BlockLayout WS_Draw(const EditorConfig* config, const Context* ctx,
+                    BlockLayout boundries)
 {
     BlockLayout blockLayout = {{16, 16}, {0, 0}, {0, 0}};
     Vector2 logoSize = {logoTexture.width, logoTexture.height};
@@ -72,8 +74,20 @@ BlockLayout WS_Draw(const EditorConfig* config, BlockLayout boundries)
         Vector2 textPos = {
             blockLayout.offset.x + (blockLayout.size.x / 2) - fonts[i].x / 2,
             textStartY + (fonts[i].y * i)};
+
+        Rectangle textRect =
+            (Rectangle){textPos.x, textPos.y, fonts[i].x, fonts[i].y};
+
+        bool hovered = CheckCollisionPointRec(ctx->mousePos, textRect);
+        Color fgColor = config->theme.primary;
+
+        if (hovered) {
+            fgColor = config->theme.tertiary;
+            DrawRectangleRec(textRect, config->theme.primary);
+        }
+
         DrawTextEx(config->font, MENU_ITEMS[i], textPos, config->fontSize, 0,
-                   config->theme.primary);
+                   fgColor);
     }
 
     return blockLayout;
